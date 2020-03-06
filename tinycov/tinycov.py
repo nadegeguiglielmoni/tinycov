@@ -37,8 +37,7 @@ def covplot(
     bam : str or click.Path
         Path to the input BAM file.
     out : str, click.Path or None
-        Output file for the figure. If none specified, show the figure without
-        saving.
+        Output file for the figure. If none specified, no figure.
     res : int
         Size of the sliding window in basepair.
     skip : int
