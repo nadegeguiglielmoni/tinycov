@@ -79,21 +79,14 @@ def covplot(
     if bins is not None:
         # Cannot skip windows if using custom binning
         skip = 1
-        bins = pd.read_csv(
-            bins, sep="\t", header=None, names=["chrom", "start", "end"]
-        )
+        bins = pd.read_csv(bins, sep="\t", header=None, names=["chrom", "start", "end"])
     if text:
         text_out = open(text, "w")
     with sns.color_palette("husl", bam_handle.nreferences):
         min_count, max_count = 0, 0
         offset, chrom_id = np.zeros(len(chromlist) + 1), 0
         for chrom, length, counts in tu.parse_bam(
-            bam_handle,
-            chromlist,
-            res,
-            bins,
-            max_depth=max_depth,
-            no_filter=no_filter,
+            bam_handle, chromlist, res, bins, max_depth=max_depth, no_filter=no_filter
         ):
             coverage = counts[counts.columns[0]].values[::skip]
             if bins is None:
@@ -151,9 +144,7 @@ def covplot(
             else:
                 lw = 1
                 color = "grey"
-            plt.axhline(
-                y=cov[0], label=aneup, ls=cov[1], lw=lw, color=color, alpha=0.5
-            )
+            plt.axhline(y=cov[0], label=aneup, ls=cov[1], lw=lw, color=color, alpha=0.5)
         plt.legend()
     plt.xlabel("Genomic position [%s]" % suffix)
     # plt.legend()
@@ -168,9 +159,7 @@ def covplot(
     if name is None:
         name = os.path.splitext(os.path.basename(bam))[0]
     plt.title(name)
-    if out is None:
-        plt.show()
-    else:
+    if out is not None:
         plt.savefig(out)
 
 
@@ -231,16 +220,9 @@ def covhist(
     if bins is not None:
         # Cannot skip windows if using custom binning
         skip = 1
-        bins = pd.read_csv(
-            bins, sep="\t", header=None, names=["chrom", "start", "end"]
-        )
+        bins = pd.read_csv(bins, sep="\t", header=None, names=["chrom", "start", "end"])
     for chrom, length, counts in tu.parse_bam(
-        bam_handle,
-        chromlist,
-        res,
-        bins,
-        max_depth=max_depth,
-        no_filter=no_filter,
+        bam_handle, chromlist, res, bins, max_depth=max_depth, no_filter=no_filter
     ):
         coverage = counts[counts.columns[0]].values[::skip]
         all_depths.append(coverage)
@@ -263,9 +245,7 @@ def covhist(
     g = (
         g.map(plt.hist, "depth", color="c", bins=hist_bins)
         .set_titles("{col_name}")
-        .set_axis_labels(
-            "coverage (%s averaged)" % res_str, "Number of windows"
-        )
+        .set_axis_labels("coverage (%s averaged)" % res_str, "Number of windows")
     )
     if name is None:
         name = os.path.splitext(os.path.basename(bam))[0]
